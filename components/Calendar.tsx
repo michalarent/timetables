@@ -82,7 +82,7 @@ export default function Calendar({
         setTranslator={setCurrentTranslator}
         currentTranslator={currentTranslator}
         currentLanguagePair={currentLanguagePair}
-        events={events?.map((el) => el.event)}
+        events={events}
         allTranslators={allTranslators}
       />
       <div

@@ -1,28 +1,34 @@
 //@ts-nocheck
 
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import {
+  Document as PDocument,
+  Page as PPage,
+  StyleSheet,
+  Text,
+  View,
+} from "@react-pdf/renderer";
 import { DateTime } from "luxon";
 import { useMemo } from "react";
 import { TIMETABLE } from "../constants/time";
-import { Event } from "../utils/finders";
+import { MappedEvent } from "../types";
 import TimelineEventPDF from "./TimelineEventPDF";
 
 export default function TimeTablePDF({
   events,
   translator,
 }: {
-  events: Event[] | undefined;
+  events: MappedEvent[] | undefined;
   translator: string;
 }) {
   const times = TIMETABLE();
 
   const mappedEvents = useMemo(() => {
     return [
-      events?.filter((event) => event.start.day === 26),
-      events?.filter((event) => event.start.day === 27),
-      events?.filter((event) => event.start.day === 28),
-      events?.filter((event) => event.start.day === 29),
-      events?.filter((event) => event.start.day === 30),
+      events?.filter((event) => event.event.start.day === 26),
+      events?.filter((event) => event.event.start.day === 27),
+      events?.filter((event) => event.event.start.day === 28),
+      events?.filter((event) => event.event.start.day === 29),
+      events?.filter((event) => event.event.start.day === 30),
     ];
   }, [events]);
 
@@ -69,16 +75,6 @@ export default function TimeTablePDF({
     },
   });
 
-  //   return (
-  //     <Document>
-  //       <Page style={{ padding: 20 }}>
-  //         <View>
-  //           <Text>{translator}</Text>
-  //         </View>
-  //       </Page>
-  //     </Document>
-  //   );
-
   return (
     <Document>
       <Page style={PDFStyles.page}>
@@ -102,14 +98,15 @@ export default function TimeTablePDF({
                   {t.toLocaleString(DateTime.TIME_24_SIMPLE)}
                 </Text>
                 {mappedEvents.map((events, index) => {
-                  return (
-                    <TimelineEventPDF
-                      key={index + "-event"}
-                      style={PDFStyles.gridItem}
-                      events={events}
-                      time={t.plus({ day: index })}
-                    />
-                  );
+                  if (events)
+                    return (
+                      <TimelineEventPDF
+                        key={index + "-event"}
+                        style={PDFStyles.gridItem}
+                        events={events}
+                        time={t.plus({ day: index })}
+                      />
+                    );
                 })}
               </View>
             ))}

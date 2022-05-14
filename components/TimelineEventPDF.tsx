@@ -11,6 +11,7 @@ export default function TimelineEventPDF({
   time: DateTime;
   style: any;
 }) {
+  console.log(events);
   const parsedEventName = events.map((event) => {
     const regex = /(\d{1,2}.\d{2})-(\d{2}.\d{2})\s(.*)/;
     const match = event.event.event.match(regex);
