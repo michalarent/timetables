@@ -1,0 +1,20 @@
+
+export const LANGUAGE_PAIRS = [
+    "PL-EN",
+    "PL-FR",
+    "EN-FR",
+    "PL-ES",
+    "EN-ES",
+    "PL-RU",
+    //   "EN-RU",
+    "PL-AR",
+    "EN-AR",
+    "PL-ZH",
+    "EN-ZH",
+    "PL-IT",
+    "EN-IT",
+    "PL-PT",
+    "EN-PT",
+    "PL-DE",
+    "EN-DE",
+];

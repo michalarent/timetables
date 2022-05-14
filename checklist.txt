@@ -1,0 +1,31 @@
+DONE:
+    Program działa w przeglądarce z jednym, uniwersalnym kontem dostępu, z bezpiecznym hasłem.
+    Z programu może korzystać jednocześnie wielu użytkowników.
+    Program pobiera dane z Google Sheet „Załącznik nr 1…”, z zakładki „Główne”
+    Harmonogram pokazuje wszystkie dni pracy tłumacza (najchętniej na jednej kartce, w ostateczności każda kartka na inny dzień) – preferowany układ strony w poziomie.
+
+IN PROGRESS:
+    Na podstawie tych danych, program generuje harmonogramy pracy tłumaczy.
+    Program pozwala wygenerować harmonogram dla jednej osoby.
+    Program generuje harmonogramy wg najnowszej/aktualnej wersji danych w zakładce „Główne” (mogą pojawić się zmiany nazwisk tłumaczy, godzin i nazw wydarzeń).
+    Harmonogramy generowane są w formacie pdf, co pozwala na ich przesłanie mailem do odpowiednich osób, oraz wydrukowanie ich w razie potrzeby.
+    Harmonogram zawiera następujące informacje:
+        Imię i nazwisko tłumacza
+        Parę językową (np. PL-FR lub EN-FR)
+        Datę
+        Godzinę rozpoczęcia i godzinę zakończenia spotkania
+        Nazwę spotkania
+        Partnera kabinowego
+        Numer sali, na której odbywa się spotkanie
+
+QUEUED:
+    Program pozwala wygenerować harmonogram dla wszystkich tłumaczy jednocześnie.
+
+
+3rd party:
+    Układ kolumn w zakładce „Główne” zostanie ujednolicony, zgodnie z zaleceniami i nie będzie zmieniany będzie jedynie możliwość zmian w wierszach.
+    
+
+Para językowa np. PL-FR ma paramentry: job | numer sali | nr zlecenia klienta | tłumacz 1 | tłumacz 2
+Baza tłumaczy z indeksem zostanie uporządkowana według następującej kolejności Lp | nazwisko i imię | nr telefonu | parajęzykowa1, parajęzykowa2. itd…
+Dalszym etapem prac jest stworzenie możliwości generowania podobnych harmonogramów dla każdej z sal (numer sali, przedziały czasowe spotkań, kombinacje językowe, imiona i nazwiska tłumaczy oraz ich numery telefonów – dane pobierane z oddzielnego, przesłanego przez nas pliku).  
