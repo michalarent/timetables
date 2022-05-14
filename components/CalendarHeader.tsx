@@ -5,7 +5,7 @@ import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { Fragment } from "react";
 import { LANGUAGE_PAIRS } from "../constants/language-pairs";
-import { Translator } from "../types";
+import { MappedEvent, Translator } from "../types";
 import {
   Event,
   findAllEventsForTranslator,
@@ -31,7 +31,7 @@ export default function CalendarHeader({
   setTranslator: (translator: Translator) => void;
   setLanguagePair: (langPair: string) => void;
   data: any;
-  events: Event[] | undefined;
+  events: MappedEvent[] | undefined;
   allTranslators: Translator[];
 }) {
   function classNames(...classes: string[]) {

@@ -1,12 +1,6 @@
 //@ts-nocheck
 
-import {
-  Document as PDocument,
-  Page as PPage,
-  StyleSheet,
-  Text,
-  View,
-} from "@react-pdf/renderer";
+import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { DateTime } from "luxon";
 import { useMemo } from "react";
 import { TIMETABLE } from "../constants/time";
