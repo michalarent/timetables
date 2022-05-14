@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { google, Auth, oauth2_v2, } from 'googleapis'
 import { env } from 'process';
-import auth from "../../auth/gcp.json";
+
 
 type Data = {
   name: string
@@ -13,11 +13,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const _url = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
 
+
+
   const oauth = new google.auth.GoogleAuth({
     credentials: {
-      client_email: auth.client_email,
-      client_id: auth.client_id,
-      private_key: auth.private_key.replace(/\\n/g, '\n'),
+      client_email: env.GCP_AUTH_EMAIL,
+      client_id: env.GCP_CLIENT_ID,
+      private_key: env.GCP_PK?.replace(/\\n/g, '\n'),
     },
     scopes: [
       'https://www.googleapis.com/auth/drive',
