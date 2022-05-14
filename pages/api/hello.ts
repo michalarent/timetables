@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   })
 
   const result = await api.spreadsheets.values.get({
-    spreadsheetId: process.env.SPREADSHEET_ID,
+    spreadsheetId: env.SPREADSHEET_ID,
     range: `Główne!A:ZZ`,
   })
 
