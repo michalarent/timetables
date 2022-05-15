@@ -5,7 +5,7 @@ import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { Fragment } from "react";
 import { LANGUAGE_PAIRS } from "../constants/language-pairs";
-import { MappedEvent, Translator } from "../types";
+import { GDocData, MappedEvent, Translator } from "../types";
 import {
   Event,
   findAllEventsForTranslator,
@@ -25,6 +25,7 @@ export default function CalendarHeader({
   data,
   events,
   allTranslators,
+  gDoc,
 }: {
   currentTranslator: Translator | undefined;
   currentLanguagePair: string;
@@ -33,6 +34,7 @@ export default function CalendarHeader({
   data: any;
   events: MappedEvent[] | undefined;
   allTranslators: Translator[];
+  gDoc: GDocData;
 }) {
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ");
@@ -69,7 +71,7 @@ export default function CalendarHeader({
             onSelect={setTranslator}
             options={findTranslatorsForLanguagePair(currentLanguagePair, data)}
           />
-          <AllPDFsButton allTranslators={allTranslators} data={data} />
+          <AllPDFsButton gDoc={gDoc} />
           {currentTranslator && (
             <PDFDownloadLink
               document={
@@ -82,9 +84,6 @@ export default function CalendarHeader({
             >
               {({ blob, url, loading, error }) => (
                 <button
-                  disabled={
-                    currentTranslator?.name === "" || currentLanguagePair === ""
-                  }
                   type="button"
                   className="ml-1 rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >

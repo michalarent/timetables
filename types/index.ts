@@ -65,7 +65,7 @@ export class GDocData {
 
                             return deepMatch(c, lang);
                         });
-                        console.log(langColStartlIndex);
+
                         result[lang] = {
                             job1: row[langColStartlIndex],
                             job2: row[langColStartlIndex + 1],

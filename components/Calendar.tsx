@@ -1,25 +1,11 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DotsHorizontalIcon,
-  RefreshIcon,
-} from "@heroicons/react/solid";
-import { Menu, Transition } from "@headlessui/react";
-import CalendarTopbar from "./CalendarTopbar";
-import CalendarSidebar from "./CalendarSidebar";
-import CalendarEvent from "./CalendarEvent";
-import { DateTime } from "luxon";
+import { RefreshIcon } from "@heroicons/react/solid";
+import { useMemo, useRef, useState } from "react";
 import { colors } from "../styles/colors";
-import CalendarHeader from "./CalendarHeader";
-import {
-  findAllEvents,
-  findAllEventsForTranslator,
-  findAllTranslators,
-} from "../utils/finders";
-import { LANGUAGE_PAIRS } from "../constants/language-pairs";
 import { GDocData, Translator } from "../types";
+import CalendarEvent from "./CalendarEvent";
+import CalendarHeader from "./CalendarHeader";
+import CalendarSidebar from "./CalendarSidebar";
+import CalendarTopbar from "./CalendarTopbar";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -78,6 +64,7 @@ export default function Calendar({
     <div className="flex h-screen flex-col">
       <CalendarHeader
         data={data}
+        gDoc={gDoc}
         setLanguagePair={setCurrentLanguagePair}
         setTranslator={setCurrentTranslator}
         currentTranslator={currentTranslator}

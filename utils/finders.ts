@@ -197,7 +197,7 @@ export function findAllEventsForTranslator(
 
         return eventsWithDays;
     } catch (e) {
-        console.log(e);
+
     }
 }
 
