@@ -12,7 +12,7 @@ export default async function zipper(
   const blobs = await Promise.all(
     message
       .filter((t) => t.translator.name !== "")
-      .slice(0, 10)
+
       .map((c) => {
         const name = c.translator.name
           .normalize("NFD")
