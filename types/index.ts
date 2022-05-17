@@ -43,11 +43,10 @@ export class GDocData {
         const allLanguagePairs = this.getaAllLanguagePairs(data);
         const result: GDocDataRow[] = [];
 
-
         let CURRENT_DAY = "";
-        data.slice(1).forEach((row) => {
+        data.forEach((row) => {
             if (!row[0]) return;
-            if (row[0].startsWith("Dzie")) {
+            if (row[0].startsWith("Day")) {
                 CURRENT_DAY = row[0];
                 return;
             }
@@ -55,8 +54,11 @@ export class GDocData {
                 return;
             }
 
+
+
             if (CURRENT_DAY !== "") {
                 const eventName = row[0];
+                console.log(eventName);
                 const { start, end } = parseTimeBrackets(CURRENT_DAY, eventName);
                 const assigned = () => {
                     const result: { [languagePair: string]: LanguageColumnRow } = {};
@@ -135,6 +137,8 @@ export class GDocData {
                 }
             })
         })
+
+
 
         return _.uniqBy(result, 'name');
     }
