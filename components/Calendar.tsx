@@ -11,7 +11,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const palette = [
+export const palette = [
   colors["amber-50"],
   colors["blue-50"],
   colors["yellow-50"],
@@ -107,7 +107,7 @@ export default function Calendar({
 
               {/* Events */}
               <ol
-                className="col-start-1 col-end-2 row-start-1 grid sm:grid-cols-7 sm:pr-8"
+                className="col-start-1 col-end-2 row-start-1 grid grid-cols-7 sm:pr-8"
                 style={{
                   gridTemplateRows: "1.75rem repeat(24, minmax(0, 1fr)) auto",
                 }}

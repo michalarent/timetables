@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { DateTime } from "luxon";
 import { useMemo } from "react";
@@ -7,6 +5,10 @@ import { TIMETABLE } from "../constants/time";
 import { MappedEvent } from "../types";
 import TimelineEventPDF from "./TimelineEventPDF";
 import { colors } from "../styles/colors";
+import { useState } from "react";
+import { palette } from "./Calendar";
+
+export const CELL_HEIGHT = 23;
 
 export default function TimeTablePDF({
   events,
@@ -16,6 +18,8 @@ export default function TimeTablePDF({
   translator: string;
 }) {
   const times = TIMETABLE();
+
+  const [alreadyGenerated, setAlreadyGenerated] = useState([]);
 
   const mappedEvents = useMemo(() => {
     const evs = events?.map((e) => ({
@@ -45,20 +49,6 @@ export default function TimeTablePDF({
     return <View>Error. Check </View>;
   }
 
-  const palette = [
-    colors["amber-50"],
-    colors["blue-50"],
-    colors["yellow-50"],
-    colors["green-50"],
-    colors["red-50"],
-    colors["purple-50"],
-    colors["pink-50"],
-    colors["indigo-50"],
-    colors["teal-50"],
-    colors["orange-50"],
-    colors["cyan-50"],
-  ];
-
   const PDFStyles = StyleSheet.create({
     page: {
       padding: 0,
@@ -77,7 +67,6 @@ export default function TimeTablePDF({
     },
     text: {
       fontSize: 9,
-      marginBottom: 5,
     },
     grid: {
       display: "flex",
@@ -88,9 +77,9 @@ export default function TimeTablePDF({
     gridItem: {
       display: "flex",
 
-      paddingLeft: 5,
-      paddingRight: 5,
-      fontSize: 8,
+      paddingLeft: 2,
+      paddingRight: 2,
+      fontSize: 6,
       width: "100%",
       flexDirection: "column",
       alignItems: "flex-start",
@@ -99,10 +88,12 @@ export default function TimeTablePDF({
   });
 
   return (
+    //@ts-ignore
     <Document>
+      {/*@ts-ignore*/}
       <Page orientation="landscape" style={PDFStyles.page}>
         <View style={PDFStyles.container}>
-          <Text
+          {/* <Text
             style={{
               ...PDFStyles.text,
               fontSize: 14,
@@ -111,11 +102,11 @@ export default function TimeTablePDF({
             }}
           >
             {translator}
-          </Text>
+          </Text> */}
           <View style={PDFStyles.grid}>
             <Text style={{ ...PDFStyles.gridItem, width: 150 }}>Events</Text>
             {mappedEvents.map((t, index) => (
-              <Text key={index + "-event"} style={PDFStyles.gridItem}>
+              <Text key={index + "-event-time"} style={PDFStyles.gridItem}>
                 {times[0]
                   .plus({ day: index })
                   .toLocaleString(DateTime.DATE_SHORT)}
@@ -124,46 +115,57 @@ export default function TimeTablePDF({
           </View>
           {times
             .filter((day) => day.day === 26)
-            .map((t) => (
-              <View key={t.toLocaleString()} style={{ ...PDFStyles.grid }}>
+            .filter((day) => day.hour < 19)
+            .map((t, i) => (
+              <View
+                key={t.toLocaleString() + `-${i}`}
+                style={{ ...PDFStyles.grid, width: "100%" }}
+              >
                 <Text
                   style={{
                     ...PDFStyles.gridItem,
                     width: 150,
-                    borderRight: `1px solid #ccc`,
-                    height: 40,
+                    borderRight: `1px solid #eee`,
+                    height: CELL_HEIGHT,
+
+                    color: "#aaa",
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 900,
+                    alignItems: "flex-start",
+                    justifyContent: "flex-start",
                   }}
                 >
                   {t.toLocaleString(DateTime.TIME_24_SIMPLE)}
                 </Text>
-                {mappedEvents.map((events: any, index) => {
-                  return (
-                    <View
-                      key={index + "-pdf-event"}
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        borderTop: "1px dashed #ccc",
-                        borderRight: "1px dashed #ccc",
-                        height: 40,
-                      }}
-                    >
-                      <TimelineEventPDF
-                        translator={translator}
-                        key={index + "-event"}
-                        style={PDFStyles.gridItem}
-                        events={events}
-                        time={t.plus({ day: index })}
-                        backgroundColor={palette[index % palette.length]}
-                      />
-                    </View>
-                  );
-                })}
+                {mappedEvents?.map(
+                  (events: MappedEvent[] | undefined, index) => {
+                    return (
+                      <View
+                        key={index + "-pdf-event"}
+                        style={{
+                          width: "100%",
+                          display: "flex",
+
+                          flexDirection: "column",
+                          borderTop: "1px solid #eee",
+                          borderRight: "1px solid #eee",
+                          height: CELL_HEIGHT,
+                          position: "relative",
+                        }}
+                      >
+                        <TimelineEventPDF
+                          setAlreadyGenerated={setAlreadyGenerated}
+                          alreadyGenerated={alreadyGenerated}
+                          translator={translator}
+                          key={index + "-event"}
+                          style={PDFStyles.gridItem}
+                          eventsForGivenDay={events}
+                          backgroundColor={palette[index % palette.length]}
+                          time={t.plus({ day: index })}
+                        />
+                      </View>
+                    );
+                  }
+                )}
               </View>
             ))}
         </View>

@@ -58,7 +58,7 @@ export class GDocData {
 
             if (CURRENT_DAY !== "") {
                 const eventName = row[0];
-                console.log(eventName);
+
                 const { start, end } = parseTimeBrackets(CURRENT_DAY, eventName);
                 const assigned = () => {
                     const result: { [languagePair: string]: LanguageColumnRow } = {};

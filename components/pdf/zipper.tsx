@@ -3,6 +3,7 @@ import JSZip from "jszip";
 import { Translator } from "../../types";
 import TimeTablePDF from "../TimeTablePDF";
 import { saveAs } from "file-saver";
+import _ from "lodash";
 
 export default async function zipper(
   message: { translator: Translator; events: any[] }[]
@@ -17,8 +18,12 @@ export default async function zipper(
         const name = c.translator.name
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "");
+        const filename = name
+          .split(" ")
+          .map((n) => _.capitalize(n))
+          .join("");
         return folder?.file(
-          `${c.translator.name}.pdf`,
+          `${filename}_timetable.pdf`,
           pdf(<TimeTablePDF translator={name} events={c.events} />).toBlob()
         );
       })
