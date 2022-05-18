@@ -27,7 +27,6 @@ export default function CalendarEvent({
     Math.abs(GLOBAL_START.diff(startTime, "days").as("days"))
   );
 
-  console.log(startTime.toLocaleString(), DAYS_DIFF);
   const HOURS_DIFF = Math.abs(
     GLOBAL_START.diff(startTime.set({ day: GLOBAL_START.day })).as("hours") * 2
   );
@@ -64,6 +63,9 @@ export default function CalendarEvent({
               <div className="text-xs">
                 {endTime.toLocaleString(DateTime.TIME_24_SIMPLE)}
               </div>
+              <div>{event.translator1.name}</div>
+              <div>{event.translator2.name}</div>
+
               {/* <p>
                   {event.pair
                     .filter((pair: string) => pair !== null)

@@ -26,6 +26,7 @@ export default function CalendarHeader({
   events,
   allTranslators,
   gDoc,
+  clearCalendarEvents,
 }: {
   currentTranslator: Translator | undefined;
   currentLanguagePair: string;
@@ -34,6 +35,7 @@ export default function CalendarHeader({
   data: any;
   events: MappedEvent[] | undefined;
   allTranslators: Translator[];
+  clearCalendarEvents: () => void;
   gDoc: GDocData;
 }) {
   function classNames(...classes: string[]) {
@@ -55,7 +57,10 @@ export default function CalendarHeader({
           <Autocomplete
             currentTranslator={currentTranslator}
             people={allTranslators}
-            setCurrentTranslator={setTranslator}
+            setCurrentTranslator={(t: any) => {
+              setTranslator(t);
+              clearCalendarEvents();
+            }}
           />
           <Select
             label={

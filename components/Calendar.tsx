@@ -1,7 +1,8 @@
 import { RefreshIcon } from "@heroicons/react/solid";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { colors } from "../styles/colors";
-import { GDocData, Translator } from "../types";
+import { GDocData, MappedEvent, Translator } from "../types";
+import { deepMatch } from "../utils/strings";
 import CalendarEvent from "./CalendarEvent";
 import CalendarHeader from "./CalendarHeader";
 import CalendarSidebar from "./CalendarSidebar";
@@ -39,6 +40,7 @@ export default function Calendar({
   const containerOffset = useRef(null);
   const [currentTranslator, setCurrentTranslator] = useState<Translator>();
   const [currentLanguagePair, setCurrentLanguagePair] = useState<string>("");
+  const [calendarEvents, setCalendarEvents] = useState<MappedEvent[]>([]);
 
   const gDoc = new GDocData(data.data);
 
@@ -54,11 +56,22 @@ export default function Calendar({
     return events;
   }, []);
 
-  const events = useMemo(() => {
+  useEffect(() => {
     if (currentTranslator) {
-      return gDoc.getAllEventsForTranslator(currentTranslator);
+      const evs = gDoc.getAllEventsForTranslator(currentTranslator);
+      const relEvs = evs.filter((e) => {
+        return (
+          deepMatch(e.translator1.name, currentTranslator.name) ||
+          deepMatch(e.translator2.name, currentTranslator.name)
+        );
+      });
+      console.log(relEvs);
+      setCalendarEvents(relEvs);
     }
-  }, [currentTranslator, currentLanguagePair, data]);
+    return () => {
+      setCalendarEvents([]);
+    };
+  }, [currentTranslator]);
 
   return (
     <div className="flex h-screen flex-col">
@@ -69,7 +82,8 @@ export default function Calendar({
         setTranslator={setCurrentTranslator}
         currentTranslator={currentTranslator}
         currentLanguagePair={currentLanguagePair}
-        events={events}
+        clearCalendarEvents={() => setCalendarEvents([])}
+        events={calendarEvents}
         allTranslators={allTranslators}
       />
       <div
@@ -113,7 +127,7 @@ export default function Calendar({
                 }}
               >
                 {currentTranslator &&
-                  events?.map((event, index) => (
+                  calendarEvents?.map((event, index) => (
                     <CalendarEvent
                       key={event.event.event}
                       startTime={event.event.start}
