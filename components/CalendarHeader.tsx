@@ -3,6 +3,7 @@ import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import { pdf, PDFDownloadLink, renderToFile } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
+import _ from "lodash";
 import { Fragment } from "react";
 import { LANGUAGE_PAIRS } from "../constants/language-pairs";
 import { GDocData, MappedEvent, Translator } from "../types";
@@ -85,7 +86,12 @@ export default function CalendarHeader({
                   events={events}
                 />
               }
-              fileName="time-table.pdf"
+              fileName={
+                currentTranslator.name
+                  .split(" ")
+                  .map((n) => _.capitalize(n))
+                  .join("") + ".pdf"
+              }
             >
               {({ blob, url, loading, error }) => (
                 <button
