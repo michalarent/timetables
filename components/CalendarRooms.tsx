@@ -2,10 +2,18 @@ import { RefreshIcon } from "@heroicons/react/solid";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { colors } from "../styles/colors";
-import { GDocData, MappedEvent, Translator } from "../types";
+import {
+  Contacts,
+  GDocData,
+  MappedEvent,
+  RoomMappedEvent,
+  Translator,
+} from "../types";
 import { deepMatch } from "../utils/strings";
 import CalendarEvent from "./CalendarEvent";
+import CalendarEventRoom from "./CalendarEventRoom";
 import CalendarHeader from "./CalendarHeader";
+import CalendarHeaderRooms from "./CalendarHeaderRooms";
 import CalendarSidebar from "./CalendarSidebar";
 import CalendarTopbar from "./CalendarTopbar";
 
@@ -27,7 +35,7 @@ export const palette = [
   colors["cyan-50"],
 ];
 
-export default function Calendar({
+export default function CalendarRooms({
   data,
   contacts,
   mutate,
@@ -41,71 +49,50 @@ export default function Calendar({
   const container = useRef(null);
   const containerNav = useRef(null);
   const containerOffset = useRef(null);
-
-  const [currentTranslator, setCurrentTranslator] = useState<
-    Translator | undefined
-  >();
+  const [currentTranslator, setCurrentTranslator] = useState<Translator>();
+  const [currentRoom, setCurrentRoom] = useState<string>("");
   const [currentLanguagePair, setCurrentLanguagePair] = useState<string>("");
-  const [calendarEvents, setCalendarEvents] = useState<MappedEvent[]>([]);
+  const [calendarEvents, setCalendarEvents] = useState<RoomMappedEvent[]>([]);
   const router = useRouter();
   const [isInit, setIsInit] = useState(false);
 
   useEffect(() => {
     if (router && router.query && !isInit) {
-      const t = router.query.t as string;
-      if (t) {
-        setCurrentTranslator({
-          name: t,
-          language: [],
-        });
+      const r = router.query.r as string;
+      if (r) {
+        setCurrentRoom(r);
       }
     }
     setIsInit(true);
   }, [router.query]);
 
   const gDoc = new GDocData(data.data);
+  const gContacts = new Contacts(contacts.data);
 
-  const allTranslators = useMemo(() => {
-    const translators = gDoc.getAllTranslators();
-    return translators;
-  }, []);
-
-  const allEvents = useMemo(() => {
-    const events = gDoc.data.map((row) => {
-      return row.event;
-    });
-    return events;
+  const allRooms = useMemo(() => {
+    const rooms = gDoc.getAllRooms();
+    return rooms;
   }, []);
 
   useEffect(() => {
-    if (currentTranslator) {
-      const evs = gDoc.getAllEventsForTranslator(currentTranslator);
-      const relEvs = evs.filter((e) => {
-        return (
-          deepMatch(e.translator1.name, currentTranslator.name) ||
-          deepMatch(e.translator2.name, currentTranslator.name)
-        );
-      });
-      console.log(relEvs);
-      setCalendarEvents(relEvs);
-    }
-    return () => {
-      setCalendarEvents([]);
-    };
-  }, [currentTranslator]);
+    const evs = gDoc.getAllEventsForRoom(currentRoom);
+    setCalendarEvents(evs);
+    return;
+  }, [allRooms, currentRoom]);
 
   return (
     <div className="flex h-screen flex-col">
-      <CalendarHeader
+      <CalendarHeaderRooms
         data={data}
+        allRooms={allRooms}
         gDoc={gDoc}
-        setLanguagePair={setCurrentLanguagePair}
-        setTranslator={setCurrentTranslator}
-        currentTranslator={currentTranslator}
-        currentLanguagePair={currentLanguagePair}
+        setCurrentRoom={(room: string) => {
+          setCalendarEvents([]);
+          setCurrentRoom(room);
+        }}
+        currentRoom={currentRoom}
         clearCalendarEvents={() => setCalendarEvents([])}
         events={calendarEvents}
-        allTranslators={allTranslators}
       />
       <div
         ref={container}
@@ -147,16 +134,18 @@ export default function Calendar({
                   gridTemplateRows: "1.75rem repeat(24, minmax(0, 1fr)) auto",
                 }}
               >
-                {currentTranslator &&
+                {currentRoom &&
                   calendarEvents?.map((event, index) => (
-                    <CalendarEvent
-                      key={event.event.event}
-                      startTime={event.event.start}
-                      endTime={event.event.end}
-                      name={event.event.event}
+                    <CalendarEventRoom
+                      contacts={gContacts}
+                      key={event.event.event.event}
+                      startTime={event.event.event.start}
+                      endTime={event.event.event.end}
+                      name={event.event.event.event}
                       color={palette[index % palette.length]}
-                      event={event}
-                      currentTranslator={currentTranslator}
+                      event={event.event}
+                      currentRoom={currentRoom}
+                      assigned={event.assigned}
                     />
                   ))}
               </ol>
@@ -169,12 +158,12 @@ export default function Calendar({
           Total found:{" "}
           <span className="text-indigo-600 font-medium">
             {" "}
-            {allTranslators.length} translators
+            {allRooms.length} rooms
           </span>{" "}
           and{" "}
-          <span className="text-indigo-600 font-medium">
+          {/* <span className="text-indigo-600 font-medium">
             {allEvents.length} events
-          </span>
+          </span> */}
         </div>
         <button
           type="button"
@@ -190,13 +179,6 @@ export default function Calendar({
               Reload <RefreshIcon className="w-3 h-3" />
             </>
           )}
-        </button>
-        <button
-          type="button"
-          onClick={() => setCurrentTranslator(undefined)}
-          className="inline-flex gap-1 items-center px-3 py-1 min-w-[100px] justify-center border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          <>Reset</>
         </button>
       </div>
     </div>

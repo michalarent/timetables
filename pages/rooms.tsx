@@ -1,16 +1,12 @@
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
-import dynamic from "next/dynamic";
 import { ErrorBoundary } from "react-error-boundary";
 import useSWR, { SWRResponse } from "swr";
+import Calendar from "../components/Calendar";
+import CalendarRooms from "../components/CalendarRooms";
 import Nav from "../components/Nav";
 
 export const getServerSideProps = withPageAuthRequired();
-
-const Calendar = dynamic(() => import("../components/Calendar"), {
-  ssr: false,
-});
-
-const Home = () => {
+export default function Rooms() {
   const data: SWRResponse<{ data: [][] }> = useSWR("/api/hello", async () =>
     fetch("/api/hello").then((res) => res.json())
   );
@@ -25,9 +21,9 @@ const Home = () => {
       <Nav />
       <ErrorBoundary fallback={<div>Error :D</div>}>
         {data.data && contacts.data ? (
-          <Calendar
-            data={data.data}
+          <CalendarRooms
             contacts={contacts.data}
+            data={data.data}
             isValidating={data.isValidating}
             mutate={data.mutate}
           />
@@ -38,6 +34,4 @@ const Home = () => {
       </ErrorBoundary>
     </div>
   );
-};
-
-export default Home;
+}

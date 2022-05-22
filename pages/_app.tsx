@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "tippy.js/dist/tippy.css"; // optional
 import type { AppProps } from "next/app";
 import { UserProvider } from "@auth0/nextjs-auth0";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";

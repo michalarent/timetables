@@ -3,9 +3,15 @@ import Tippy from "@tippyjs/react";
 import { DateTime } from "luxon";
 import { Fragment } from "react";
 import { GLOBAL_START } from "../constants/time";
-import { GDocDataRow, MappedEvent, Translator } from "../types";
+import {
+  AssignedToEvent,
+  Contacts,
+  GDocDataRow,
+  MappedEvent,
+  Translator,
+} from "../types";
 import { capitalizeName, deepMatch } from "../utils/strings";
-import RoomWithLink from "./RoomWithLink";
+import TranslatorWithContact from "./TranslatorWithContact";
 
 export default function CalendarEvent({
   startTime,
@@ -13,14 +19,18 @@ export default function CalendarEvent({
   name,
   color,
   event,
-  currentTranslator,
+  currentRoom,
+  assigned,
+  contacts,
 }: {
   startTime: DateTime;
   endTime: DateTime;
   name: string;
   color: string;
   event: MappedEvent;
-  currentTranslator: Translator;
+  currentRoom: string;
+  assigned: AssignedToEvent;
+  contacts: Contacts;
 }) {
   // 1 row === half hour
 
@@ -55,6 +65,7 @@ export default function CalendarEvent({
             leaveTo="opacity-0 translate-y-1"
           >
             <div className="p-2 rounded-lg text-sm bg-gray-200 text-black">
+              <div>Room: {event.room}</div>
               <div className="font-medium">{name}</div>
               <div className="text-xs">Starts At:</div>
               <div className="text-xs">
@@ -88,22 +99,34 @@ export default function CalendarEvent({
             style={{ background: color }}
             className="px-1 group absolute inset-1 shadow flex flex-col overflow-y-auto justify-start text-xs leading-1  "
           >
-            <div className="  flex pb-1 border-b justify-between items-center">
-              <RoomWithLink room={event.room} />
-              <div className="p-0.5 bg-black text-black rounded-lg bg-opacity-20 border ">
-                {event.languagePair || "Unknown"}
-              </div>
-            </div>
-            <div>
-              with{" "}
-              {deepMatch(event.translator1.name, currentTranslator.name)
-                ? event.translator2.name
-                : event.translator1.name}
-            </div>
-            <div className="order-1 font-semibold text-black">{name}</div>
-            <div className="order-1 font-semibold text-black">
-              {startTime.toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}
-            </div>
+            {assigned.map((ass) => {
+              console.log(ass.translator1);
+              return (
+                <div
+                  key={ass.job1 + ass.translator1.name}
+                  className="  flex pb-1 border-b justify-between items-center"
+                >
+                  <div>
+                    {ass.translator1.name === "" &&
+                    ass.translator2.name === "" ? (
+                      <span className="text-gray-400">Unassigned</span>
+                    ) : (
+                      <>
+                        <TranslatorWithContact
+                          contacts={contacts}
+                          translator={ass.translator1}
+                        />
+                        + {ass.translator2.name}
+                      </>
+                    )}{" "}
+                  </div>
+                  <div className="p-0.5 bg-black font-mono w-max text-black rounded-lg bg-opacity-20 border ">
+                    {ass.languagePair || "Unknown"}
+                  </div>
+                </div>
+              );
+            })}
+
             {/* <div>Job: {event.job1 || "Unknown"}</div> */}
             {/* <p className="text-blue-500 group-hover:text-blue-700">
           <time dateTime="2022-01-12T06:00">
