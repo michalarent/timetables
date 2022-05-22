@@ -29,6 +29,7 @@ export default function RoomWithLink({ room }: { room: string }) {
           className="p-2 cursor-default shadow-lg rounded-lg text-sm bg-gray-200 text-black"
           {...attrs}
         >
+          <div>Room: {room}</div>
           <Link href={`/rooms?r=${room}`} passHref>
             <a target="_blank" rel="noreferrer">
               <button

@@ -74,8 +74,7 @@ export class Contacts {
     }
     findByName(name: string): Contact | undefined {
         try {
-            console.log(this.data);
-            console.log(name);
+
             return this.data
                 .filter((row) => row != null && row.fullName)
                 .find((row) => row?.fullName ? this.levenshteinMatch(row.fullName, name) : false);

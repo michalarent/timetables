@@ -72,7 +72,9 @@ export default function TranslatorWithContact({
         </div>
       )}
     >
-      <span>{translator.name}</span>
+      <span className="cursor-default text-blue-800 font-medium hover:brightness-90">
+        {translator.name}
+      </span>
     </Tippy>
   );
 }

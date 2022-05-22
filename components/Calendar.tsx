@@ -2,7 +2,7 @@ import { RefreshIcon } from "@heroicons/react/solid";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { colors } from "../styles/colors";
-import { GDocData, MappedEvent, Translator } from "../types";
+import { Contacts, GDocData, MappedEvent, Translator } from "../types";
 import { deepMatch } from "../utils/strings";
 import CalendarEvent from "./CalendarEvent";
 import CalendarHeader from "./CalendarHeader";
@@ -49,6 +49,7 @@ export default function Calendar({
   const [calendarEvents, setCalendarEvents] = useState<MappedEvent[]>([]);
   const router = useRouter();
   const [isInit, setIsInit] = useState(false);
+  const gContacts = new Contacts(contacts.data);
 
   useEffect(() => {
     if (router && router.query && !isInit) {
@@ -157,6 +158,7 @@ export default function Calendar({
                       color={palette[index % palette.length]}
                       event={event}
                       currentTranslator={currentTranslator}
+                      contacts={gContacts}
                     />
                   ))}
               </ol>

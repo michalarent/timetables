@@ -3,9 +3,10 @@ import Tippy from "@tippyjs/react";
 import { DateTime } from "luxon";
 import { Fragment } from "react";
 import { GLOBAL_START } from "../constants/time";
-import { GDocDataRow, MappedEvent, Translator } from "../types";
+import { Contacts, GDocDataRow, MappedEvent, Translator } from "../types";
 import { capitalizeName, deepMatch } from "../utils/strings";
 import RoomWithLink from "./RoomWithLink";
+import TranslatorWithContact from "./TranslatorWithContact";
 
 export default function CalendarEvent({
   startTime,
@@ -14,6 +15,7 @@ export default function CalendarEvent({
   color,
   event,
   currentTranslator,
+  contacts,
 }: {
   startTime: DateTime;
   endTime: DateTime;
@@ -21,6 +23,7 @@ export default function CalendarEvent({
   color: string;
   event: MappedEvent;
   currentTranslator: Translator;
+  contacts: Contacts;
 }) {
   // 1 row === half hour
 
@@ -96,9 +99,17 @@ export default function CalendarEvent({
             </div>
             <div>
               with{" "}
-              {deepMatch(event.translator1.name, currentTranslator.name)
-                ? event.translator2.name
-                : event.translator1.name}
+              {deepMatch(event.translator1.name, currentTranslator.name) ? (
+                <TranslatorWithContact
+                  contacts={contacts}
+                  translator={event.translator2}
+                />
+              ) : (
+                <TranslatorWithContact
+                  contacts={contacts}
+                  translator={event.translator1}
+                />
+              )}
             </div>
             <div className="order-1 font-semibold text-black">{name}</div>
             <div className="order-1 font-semibold text-black">

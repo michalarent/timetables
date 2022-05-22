@@ -29,6 +29,8 @@ export default function TranslatorsPage() {
           data.mutate();
           contacts.mutate();
         }}
+        isValidating={data.isValidating || contacts.isValidating}
+        gDocData={gDoc}
         allTranslators={allTranslators}
         allContacts={allContacts}
       />
