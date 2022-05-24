@@ -93,16 +93,17 @@ export default function TimeTablePDF({
       {/*@ts-ignore*/}
       <Page orientation="landscape" style={PDFStyles.page}>
         <View style={PDFStyles.container}>
-          {/* <Text
+          <Text
             style={{
               ...PDFStyles.text,
               fontSize: 14,
               marginLeft: 8,
+              marginBottom: 8,
               fontWeight: 900,
             }}
           >
             {translator}
-          </Text> */}
+          </Text>
           <View style={PDFStyles.grid}>
             <Text style={{ ...PDFStyles.gridItem, width: 150 }}>Events</Text>
             {mappedEvents.map((t, index) => (
