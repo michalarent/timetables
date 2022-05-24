@@ -257,7 +257,7 @@ export class GDocData {
             })
         })
 
-        console.log("RESULT:", result);
+
         return _.uniqBy(result, (e) => e.event.event).map((event) => ({
             event,
             assigned: result.filter((e) => e.event.event === event.event.event).map((e) => (

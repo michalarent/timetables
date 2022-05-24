@@ -83,6 +83,7 @@ export default function CalendarRooms({
   return (
     <div className="flex h-screen flex-col">
       <CalendarHeaderRooms
+        contacts={gContacts}
         data={data}
         allRooms={allRooms}
         gDoc={gDoc}

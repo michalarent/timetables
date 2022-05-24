@@ -1,9 +1,9 @@
-import zipper from "./components/pdf/zipper";
+import roomZipper from "./components/pdf/roomZipper";
 
 addEventListener("message", (event) => {
 
     const msg = JSON.parse(event.data);
-    const ret = zipper(msg).then((blobs) => {
+    const ret = roomZipper(msg).then((blobs) => {
         console.log(blobs);
         postMessage(blobs);
     })

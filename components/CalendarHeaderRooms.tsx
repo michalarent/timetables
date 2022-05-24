@@ -3,11 +3,13 @@ import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import _ from "lodash";
 import { Fragment } from "react";
-import { GDocData, MappedEvent, RoomMappedEvent } from "../types";
+import { Contacts, GDocData, MappedEvent, RoomMappedEvent } from "../types";
 import AutocompleteRoom from "./AutocompleteRoom";
 import AllPDFsButton from "./pdf/AllPDFsButton";
+import AllPDFsButtonRooms from "./pdf/AllPDFsButtonRooms";
 import Select from "./Select";
 import TimeTablePDF from "./TimeTablePDF";
+import TimeTablePDFRoom from "./TimeTablePDFRoom";
 
 export default function CalendarHeaderRooms({
   currentRoom,
@@ -17,6 +19,7 @@ export default function CalendarHeaderRooms({
   allRooms,
   gDoc,
   clearCalendarEvents,
+  contacts,
 }: {
   currentRoom: string;
   setCurrentRoom: (str: string) => void;
@@ -25,6 +28,7 @@ export default function CalendarHeaderRooms({
   allRooms: string[];
   clearCalendarEvents: () => void;
   gDoc: GDocData;
+  contacts: Contacts;
 }) {
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ");
@@ -52,13 +56,19 @@ export default function CalendarHeaderRooms({
             onSelect={setCurrentRoom}
             options={allRooms}
           />
-          <AllPDFsButton gDoc={gDoc} />
+          <AllPDFsButtonRooms
+            gDoc={gDoc}
+            contacts={contacts}
+            currentRoom={currentRoom}
+            events={events}
+          />
           {currentRoom && (
             <PDFDownloadLink
               document={
-                <TimeTablePDF
-                  translator={currentRoom}
-                  events={events?.map((event) => event.event)}
+                <TimeTablePDFRoom
+                  room={currentRoom}
+                  contacts={contacts.data}
+                  events={events}
                 />
               }
               fileName={

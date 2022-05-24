@@ -4,7 +4,8 @@ import { useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import useSWR, { SWRResponse } from "swr";
 import TimeTablePDF from "../components/TimeTablePDF";
-import { GDocData } from "../types";
+import TimeTablePDFRoom from "../components/TimeTablePDFRoom";
+import { Contacts, GDocData } from "../types";
 
 export const getServerSideProps = withPageAuthRequired();
 
@@ -17,18 +18,25 @@ const Home = () => {
     fetch("/api/hello").then((res) => res.json())
   );
 
-  if (!data.data || !data.data.data) {
+  const contacts: SWRResponse<{ data: [][] }> = useSWR(
+    `/api/contacts`,
+    async () => fetch("/api/contacts").then((res) => res.json())
+  );
+
+  if (!data.data || !data.data.data || !contacts.data || !contacts.data.data) {
     return <div>Loading...</div>;
   }
   const gDoc = new GDocData(data.data.data);
   const allTranslators = gDoc.getAllTranslators();
+  const gContacts = new Contacts(contacts.data.data);
 
   return (
     <ErrorBoundary fallback={<div>Error :D</div>}>
       {data.data ? (
-        <TimeTablePDF
-          translator={allTranslators[1].name}
-          events={gDoc.getAllEventsForTranslator(allTranslators[1])}
+        <TimeTablePDFRoom
+          contacts={gContacts.data}
+          room={"N1"}
+          events={gDoc.getAllEventsForRoom("N1")}
         />
       ) : (
         // <Test data={data.data} />

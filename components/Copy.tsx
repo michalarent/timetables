@@ -10,9 +10,7 @@ export default function Copy({ text }: { text: string }) {
     <Tippy
       hideOnClick={false}
       render={() => (
-        <div className="bg-gray-500 text-white px-2 py-0.5 rounded-xl">
-          {isCopied ? "Skopiowano" : "Skopiuj"}
-        </div>
+        <div className="bg-gray-500 text-white px-2 py-0.5 rounded-xl">{isCopied ? "Skopiowano" : "Skopiuj"}</div>
       )}
     >
       <DuplicateIcon
