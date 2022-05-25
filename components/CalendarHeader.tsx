@@ -59,8 +59,8 @@ export default function CalendarHeader({
             currentTranslator={currentTranslator}
             people={allTranslators}
             setCurrentTranslator={(t: any) => {
-              setTranslator(t);
               clearCalendarEvents();
+              setTranslator(t);
             }}
           />
           <Select
@@ -74,7 +74,10 @@ export default function CalendarHeader({
           <Select
             itemLabel={"name"}
             label={!currentTranslator ? "Translator" : currentTranslator?.name}
-            onSelect={setTranslator}
+            onSelect={(t) => {
+              clearCalendarEvents();
+              setTranslator(t);
+            }}
             options={findTranslatorsForLanguagePair(currentLanguagePair, data)}
           />
           <AllPDFsButton gDoc={gDoc} />

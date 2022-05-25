@@ -34,14 +34,23 @@ export default function CalendarEvent({
 }) {
   // 1 row === half hour
 
-  const DAYS_DIFF = Math.round(
-    Math.abs(GLOBAL_START.diff(startTime, "days").as("days"))
+  const DAYS_DIFF = Math.abs(GLOBAL_START.diff(startTime, "days").as("days"));
+
+  const HOURS_DIFF = Math.round(
+    Math.abs(
+      GLOBAL_START.diff(startTime.set({ day: GLOBAL_START.day })).as("hours") *
+        4
+    )
+  );
+  const DURATION = Math.round(
+    Math.abs(endTime.diff(startTime).as("hours") * 4)
   );
 
-  const HOURS_DIFF = Math.abs(
-    GLOBAL_START.diff(startTime.set({ day: GLOBAL_START.day })).as("hours") * 2
+  const cleanedTranslators = assigned.filter((ass) =>
+    [ass.translator1, ass.translator2].some(
+      (t) => t.name != null && t.name !== ""
+    )
   );
-  const DURATION = Math.abs(endTime.diff(startTime).as("hours") * 2);
 
   return (
     <>
@@ -58,40 +67,46 @@ export default function CalendarEvent({
           <div className="mb-1 border-b w-full">
             <b>{event.event.event}</b>
           </div>
-          {assigned.map((ass) => {
-            console.log(ass.translator1);
-            return (
-              <div
-                key={ass.job1 + ass.translator1.name}
-                className="w-full flex pb-1 border-b gap-2 justify-between items-center"
-              >
-                <div className="w-max">
-                  {ass.translator1.name === "" ||
-                  !ass.translator1! ||
-                  !ass.translator2 ||
-                  ass.translator2.name === "" ? (
-                    <span className="text-gray-400">Unassigned</span>
-                  ) : (
-                    <>
-                      <TranslatorWithContact
-                        contacts={contacts}
-                        translator={ass.translator1}
-                      />
-                      {", "}
-                      <TranslatorWithContact
-                        contacts={contacts}
-                        translator={ass.translator2}
-                      />
-                    </>
-                  )}
+          {cleanedTranslators.length ? (
+            cleanedTranslators.map((ass) => {
+              console.log(ass.translator1);
+              return (
+                <div
+                  key={ass.job1 + ass.translator1.name}
+                  className="w-full flex pb-1 border-b gap-2 justify-between items-center"
+                >
+                  <div className="w-max">
+                    {ass.translator1.name === "" ||
+                    !ass.translator1! ||
+                    !ass.translator2 ||
+                    ass.translator2.name === "" ? (
+                      <span className="text-gray-400">Unassigned</span>
+                    ) : (
+                      <>
+                        <TranslatorWithContact
+                          contacts={contacts}
+                          translator={ass.translator1}
+                        />
+                        {", "}
+                        <TranslatorWithContact
+                          contacts={contacts}
+                          translator={ass.translator2}
+                        />
+                      </>
+                    )}
+                  </div>
+                  <div className="p-0.5  bg-black w-max break-before-avoid whitespace-nowrap text-black text-[9px] font-mono  rounded-lg bg-opacity-20 border ">
+                    {ass.languagePair.toUpperCase().replace("-", "/") ||
+                      "Unknown"}
+                  </div>
                 </div>
-                <div className="p-0.5  bg-black w-max break-before-avoid whitespace-nowrap text-black text-[9px] font-mono  rounded-lg bg-opacity-20 border ">
-                  {ass.languagePair.toUpperCase().replace("-", "/") ||
-                    "Unknown"}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            <div className="w-full flex pb-1 gap-2 justify-between items-center">
+              Nobody is assigned
+            </div>
+          )}
 
           {/* <div>Job: {event.job1 || "Unknown"}</div> */}
           {/* <p className="text-blue-500 group-hover:text-blue-700">

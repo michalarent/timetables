@@ -88,7 +88,6 @@ export default function CalendarRooms({
         allRooms={allRooms}
         gDoc={gDoc}
         setCurrentRoom={(room: string) => {
-          setCalendarEvents([]);
           setCurrentRoom(room);
         }}
         currentRoom={currentRoom}
@@ -132,14 +131,20 @@ export default function CalendarRooms({
               <ol
                 className="col-start-1 col-end-2 row-start-1 grid grid-cols-7 sm:pr-8"
                 style={{
-                  gridTemplateRows: "1.75rem repeat(24, minmax(0, 1fr)) auto",
+                  gridTemplateRows: "1.75rem repeat(48, minmax(0, 1fr)) auto",
                 }}
               >
                 {currentRoom &&
                   calendarEvents?.map((event, index) => (
                     <CalendarEventRoom
                       contacts={gContacts}
-                      key={event.event.event.event}
+                      key={
+                        event.event.event.event +
+                        currentRoom +
+                        event.event.job2 +
+                        event.event.job1 +
+                        index
+                      }
                       startTime={event.event.event.start}
                       endTime={event.event.event.end}
                       name={event.event.event.event}

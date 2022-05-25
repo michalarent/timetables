@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import { useEffect } from "react";
 import { colors } from "../styles/colors";
 import { MappedEvent } from "../types";
-import { deepMatch } from "../utils/strings";
+import { deepMatch, polishReplace } from "../utils/strings";
 import { CELL_HEIGHT } from "./TimeTablePDF";
 
 export default function TimelineEventPDF({
@@ -52,8 +52,8 @@ export default function TimelineEventPDF({
     try {
       if (!event) return false;
       return deepMatch(event?.translator1?.name, translator)
-        ? event?.translator2?.name
-        : event?.translator1?.name;
+        ? polishReplace(event?.translator2?.name)
+        : polishReplace(event?.translator1?.name);
     } catch {
       return "-";
     }
@@ -131,35 +131,57 @@ export default function TimelineEventPDF({
     Math.abs(event.event.end.diff(event.event.start).as("hours")) * 80;
 
   // !background && console.log(!background ? "Error!" : "");
+
+  if (!time.equals(event.event.start)) return null;
+
+  const DURATION = Math.round(
+    Math.abs(event.event.end.diff(event.event.start).as("hours") * 4)
+  );
+
   return (
-    <>
+    <View style={{ position: "relative", width: "100%" }}>
       <View
         style={{
           display: "flex",
 
           flexDirection: "column",
-          height: CELL_HEIGHT,
+          height: DURATION * CELL_HEIGHT,
           backgroundColor,
           width: "100%",
-          alignItems: "center",
-          justifyContent: "center",
+          alignItems: "flex-start",
+          justifyContent: "flex-start",
           borderColor: "black",
+          position: "absolute",
+          zIndex: 0,
+
           borderTop: time.equals(event.event.start) ? "1px solid #ccc" : "none",
-          borderBottom: time.equals(event.event.end.minus({ minutes: 30 }))
+          borderBottom: time.equals(event.event.end.minus({ minutes: 15 }))
             ? "1px solid #ccc"
             : "none",
         }}
       >
-        {time.equals(event.event.start) && (
-          <>
+        {/* {time.equals(event.event.start) && ( */}
+        <View style={{ width: "100%", zIndex: 100 }}>
+          <View
+            style={{
+              position: "absolute",
+
+              width: "100%",
+              zIndex: 100,
+            }}
+          >
             <Text
               style={{
                 ...style,
+                zIndex: 10000,
+
                 display: "flex",
                 flexDirection: "row",
                 fontWeight: 900,
                 width: "100%",
-                position: "relative",
+
+                left: 0,
+                top: 0,
               }}
             >
               <Text
@@ -169,17 +191,20 @@ export default function TimelineEventPDF({
                 }}
               >
                 Room: {event.room || "-"} {event.languagePair?.toUpperCase()}{" "}
-                with {getOtherTranslatorName()}
+                with {getOtherTranslatorName()}{" "}
               </Text>
             </Text>
             <View style={{ width: "100%" }}>
               <Text style={{ ...style, width: "100%" }}>
+                {event.event.start.toLocaleString(DateTime.TIME_24_SIMPLE)} -{" "}
+                {event.event.end.toLocaleString(DateTime.TIME_24_SIMPLE)}{" "}
                 {parseEventName(event.event.event)}
               </Text>
             </View>
-          </>
-        )}
+          </View>
+        </View>
+        {/* )} */}
       </View>
-    </>
+    </View>
   );
 }

@@ -104,7 +104,10 @@ export default function Calendar({
         setTranslator={setCurrentTranslator}
         currentTranslator={currentTranslator}
         currentLanguagePair={currentLanguagePair}
-        clearCalendarEvents={() => setCalendarEvents([])}
+        clearCalendarEvents={() => {
+          // router.replace("/", "/", { shallow: true });
+          // setCalendarEvents([]);
+        }}
         events={calendarEvents}
         allTranslators={allTranslators}
       />
@@ -145,13 +148,18 @@ export default function Calendar({
               <ol
                 className="col-start-1 col-end-2 row-start-1 grid grid-cols-7 sm:pr-8"
                 style={{
-                  gridTemplateRows: "1.75rem repeat(24, minmax(0, 1fr)) auto",
+                  gridTemplateRows: "1.75rem repeat(48, minmax(0, 1fr)) auto",
                 }}
               >
                 {currentTranslator &&
                   calendarEvents?.map((event, index) => (
                     <CalendarEvent
-                      key={event.event.event}
+                      key={
+                        currentTranslator +
+                        event.event.event +
+                        index +
+                        event.job1
+                      }
                       startTime={event.event.start}
                       endTime={event.event.end}
                       name={event.event.event}

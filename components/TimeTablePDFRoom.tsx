@@ -11,39 +11,10 @@ import { DateTime } from "luxon";
 import { useMemo, useState } from "react";
 import { TIMETABLE } from "../constants/time";
 import { AssignedToEvent, Contact, MappedEvent } from "../types";
+import { polishReplace } from "../utils/strings";
 import { palette } from "./Calendar";
 import TimelineEventPDF from "./TimelineEventPDF";
 
-// replace special polish characters
-const polishChars = {
-  ą: "a",
-  ć: "c",
-  ę: "e",
-  ł: "l",
-  ń: "n",
-  ó: "o",
-  ś: "s",
-  ź: "z",
-  ż: "z",
-  Ą: "A",
-  Ć: "C",
-  Ę: "E",
-  Ł: "L",
-  Ń: "N",
-  Ó: "O",
-  Ś: "S",
-  Ź: "Z",
-  Ż: "Z",
-};
-
-//function to replace polish characters
-const polishReplace = (str: string) => {
-  return str.replace(
-    /[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g,
-    //@ts-ignore
-    (match: any) => polishChars[match]
-  );
-};
 export const CELL_HEIGHT = 23;
 
 export default function TimeTablePDF({
@@ -261,6 +232,27 @@ export default function TimeTablePDF({
                                     </View>
                                   );
                                 })}
+                                <View
+                                  style={{
+                                    marginTop: 10,
+                                    display: "flex",
+                                    flexDirection: "row",
+                                  }}
+                                >
+                                  <View>
+                                    <Text style={{ fontSize: 6 }}>
+                                      Godzina zakonczenia:
+                                    </Text>
+                                  </View>
+                                  <View
+                                    style={{
+                                      marginLeft: 10,
+                                      fontSize: 6,
+                                      width: "100%",
+                                      borderBottom: `1px dotted #ccc`,
+                                    }}
+                                  />
+                                </View>
                               </View>
                             );
                           })}

@@ -27,14 +27,17 @@ export default function CalendarEvent({
 }) {
   // 1 row === half hour
 
-  const DAYS_DIFF = Math.round(
-    Math.abs(GLOBAL_START.diff(startTime, "days").as("days"))
-  );
+  const DAYS_DIFF = Math.abs(GLOBAL_START.diff(startTime, "days").as("days"));
 
-  const HOURS_DIFF = Math.abs(
-    GLOBAL_START.diff(startTime.set({ day: GLOBAL_START.day })).as("hours") * 2
+  const HOURS_DIFF = Math.round(
+    Math.abs(
+      GLOBAL_START.diff(startTime.set({ day: GLOBAL_START.day })).as("hours") *
+        4
+    )
   );
-  const DURATION = Math.abs(endTime.diff(startTime).as("hours") * 2);
+  const DURATION = Math.round(
+    Math.abs(endTime.diff(startTime).as("hours") * 4)
+  );
 
   return (
     <>
@@ -84,7 +87,12 @@ export default function CalendarEvent({
           className={`relative p-0 m-0 flex col-span-1 col-start-${
             DAYS_DIFF + 1
           }  `}
-          style={{ gridRow: `${HOURS_DIFF + 2} / span ${DURATION}` }}
+          style={{
+            gridRow: `${HOURS_DIFF + 2} / span ${DURATION}`,
+            // transform: `translateY(${
+            //   event.event.start.get("minute") === 45 ? "-1.25rem" : ""
+            // })`,
+          }}
         >
           <a
             href="#"

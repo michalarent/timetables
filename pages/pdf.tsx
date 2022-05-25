@@ -33,10 +33,12 @@ const Home = () => {
   return (
     <ErrorBoundary fallback={<div>Error :D</div>}>
       {data.data ? (
-        <TimeTablePDFRoom
-          contacts={gContacts.data}
-          room={"N1"}
-          events={gDoc.getAllEventsForRoom("N1")}
+        <TimeTablePDF
+          translator="Krasnowolski Piotr"
+          events={gDoc.getAllEventsForTranslator({
+            name: "Krasnowolski Piotr",
+            language: [],
+          })}
         />
       ) : (
         // <Test data={data.data} />

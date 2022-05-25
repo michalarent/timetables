@@ -24,9 +24,9 @@ export const TIMETABLE = () => {
 
     for (let i = 26; i <= 30; i++) {
         const startTime = 8;
-        for (let j = 0; j <= 24; j++) {
+        for (let j = 0; j <= 48; j++) {
             const date = DateTime.fromObject({ day: i, month: 6, year: 2022, hour: startTime, minute: 0 });
-            const time = date.plus({ minutes: 30 * j });
+            const time = date.plus({ minutes: 15 * j });
             timetable.push(time);
         }
     }

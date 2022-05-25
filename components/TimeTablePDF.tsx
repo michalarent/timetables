@@ -7,8 +7,9 @@ import TimelineEventPDF from "./TimelineEventPDF";
 import { colors } from "../styles/colors";
 import { useState } from "react";
 import { palette } from "./Calendar";
+import { capitalizeName, polishReplace } from "../utils/strings";
 
-export const CELL_HEIGHT = 23;
+export const CELL_HEIGHT = 12;
 
 export default function TimeTablePDF({
   events,
@@ -102,7 +103,7 @@ export default function TimeTablePDF({
               fontWeight: 900,
             }}
           >
-            {translator}
+            {capitalizeName(polishReplace(translator))}
           </Text>
           <View style={PDFStyles.grid}>
             <Text style={{ ...PDFStyles.gridItem, width: 150 }}>Events</Text>
@@ -147,7 +148,10 @@ export default function TimeTablePDF({
                           display: "flex",
 
                           flexDirection: "column",
-                          borderTop: "1px solid #eee",
+                          borderTop:
+                            t.get("minute") !== 15 && t.get("minute") !== 45
+                              ? "1px solid #eee"
+                              : "none",
                           borderRight: "1px solid #eee",
                           height: CELL_HEIGHT,
                           position: "relative",

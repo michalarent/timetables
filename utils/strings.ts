@@ -16,3 +16,34 @@ export function cleanString(a: string) {
     if (!a) return "";
     return a.trim().toLowerCase();
 }
+
+// replace special polish characters
+const polishChars = {
+    ą: "a",
+    ć: "c",
+    ę: "e",
+    ł: "l",
+    ń: "n",
+    ó: "o",
+    ś: "s",
+    ź: "z",
+    ż: "z",
+    Ą: "A",
+    Ć: "C",
+    Ę: "E",
+    Ł: "L",
+    Ń: "N",
+    Ó: "O",
+    Ś: "S",
+    Ź: "Z",
+    Ż: "Z",
+};
+
+//function to replace polish characters
+export const polishReplace = (str: string) => {
+    return str.replace(
+        /[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g,
+        //@ts-ignore
+        (match: any) => polishChars[match]
+    );
+};
