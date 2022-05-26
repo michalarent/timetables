@@ -27,7 +27,9 @@ export default function CalendarEvent({
 }) {
   // 1 row === half hour
 
-  const DAYS_DIFF = Math.abs(GLOBAL_START.diff(startTime, "days").as("days"));
+  const DAYS_DIFF = Math.round(
+    Math.abs(GLOBAL_START.diff(startTime, "days").as("days"))
+  );
 
   const HOURS_DIFF = Math.round(
     Math.abs(
@@ -39,6 +41,7 @@ export default function CalendarEvent({
     Math.abs(endTime.diff(startTime).as("hours") * 4)
   );
 
+  console.log(DAYS_DIFF);
   return (
     <>
       <Tippy
