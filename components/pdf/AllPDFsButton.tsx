@@ -17,12 +17,17 @@ export default function AllPDFsButton({
     workerRef.current = new Worker(new URL("/worker.ts", import.meta.url));
 
     workerRef.current.onmessage = (evt) => {
-      console.log(evt);
-      setWorkerLoading(false);
-      setWorkerProcessing(true);
-      const blob = evt.data as Blob;
-      saveAs(blob as any, "timetables.zip");
-      setWorkerProcessing(false);
+      try {
+        console.log(evt);
+        setWorkerLoading(false);
+        setWorkerProcessing(true);
+        const blob = evt.data as Blob;
+        saveAs(blob as any, "timetables.zip");
+        setWorkerProcessing(false);
+      } catch (e) {
+        console.log(e);
+        setWorkerLoading(false);
+      }
     };
     return () => {
       if (workerRef.current) workerRef.current.terminate();
@@ -55,7 +60,9 @@ export default function AllPDFsButton({
         setWorkerLoading(true);
         handleWork(all);
       }}
-      className="ml-1 rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      className={` ml-1 rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+        workerLoading ? "animate-pulse" : ""
+      }`}
     >
       {workerLoading
         ? "Loading..."

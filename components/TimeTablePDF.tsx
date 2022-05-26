@@ -8,6 +8,7 @@ import { colors } from "../styles/colors";
 import { useState } from "react";
 import { palette } from "./Calendar";
 import { capitalizeName, polishReplace } from "../utils/strings";
+import _ from "lodash";
 
 export const CELL_HEIGHT = 12;
 
@@ -106,12 +107,21 @@ export default function TimeTablePDF({
             {capitalizeName(polishReplace(translator))}
           </Text>
           <View style={PDFStyles.grid}>
-            <Text style={{ ...PDFStyles.gridItem, width: 150 }}>Events</Text>
+            <Text style={{ ...PDFStyles.gridItem, width: 150 }}>{""}</Text>
             {mappedEvents.map((t, index) => (
-              <Text key={index + "-event-time"} style={PDFStyles.gridItem}>
-                {times[0]
-                  .plus({ day: index })
-                  .toLocaleString(DateTime.DATE_SHORT)}
+              <Text
+                key={index + "-event-time"}
+                style={{ ...PDFStyles.gridItem, fontSize: 8, fontWeight: 900 }}
+              >
+                {_.capitalize(
+                  polishReplace(
+                    times[0]
+                      .plus({ day: index })
+                      .toLocaleString(DateTime.DATE_HUGE, {
+                        locale: "pl-PL",
+                      })
+                  )
+                )}
               </Text>
             ))}
           </View>
