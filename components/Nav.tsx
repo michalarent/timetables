@@ -1,9 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
-import { useRouter } from "next/router";
+import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -22,6 +20,11 @@ export default function Nav() {
       name: "All Translators",
       href: "/translators",
       current: router.pathname === "/translators",
+    },
+    {
+      name: "Wolni",
+      href: "/checker",
+      current: router.pathname === "/checker",
     },
   ];
   return (

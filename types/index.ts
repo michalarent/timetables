@@ -3,6 +3,7 @@ import { DateTime } from "luxon";
 import { Event, parseTimeBrackets } from "../utils/finders";
 import { cleanString, deepMatch } from "../utils/strings";
 import levenshtein from "js-levenshtein";
+import { assert } from "console";
 
 
 export class Translator {
@@ -42,15 +43,26 @@ export type Contact = {
     email: string;
 }
 
+export function reverseName(name: string): string {
+    const [lastName, firstName] = name.split(" ");
+    return `${firstName} ${lastName}`;
+}
+
+export function levenshteinMatch(name: string, target: string): boolean {
+    return levenshtein(target, name) <= 5 || levenshtein(target, reverseName(name)) <= 5;
+}
+
 export class Contacts {
     readonly data: Contact[];
+    readonly allUniqueLanguages: string[];
 
     constructor(data: string[][]) {
         this.data = this.parseContactData(data);
+        this.allUniqueLanguages = this.parseAllUniqueLanguages();
     }
 
     parseContactData(data: string[][]): Contact[] {
-        return data.slice(1).map((row, index) => {
+        const contacts = data.slice(1).map((row, index) => {
             const [indexStr, lastName, firstName, lp1, lp2, lp3, phone, email] = row;
             return {
                 index: indexStr,
@@ -62,22 +74,35 @@ export class Contacts {
                 email: email,
             }
         });
+        return _.uniqBy(contacts, x => x.email);
     }
 
-    reverseName(name: string): string {
-        const [lastName, firstName] = name.split(" ");
-        return `${firstName} ${lastName}`;
+    parseAllUniqueLanguages(): string[] {
+        return _.uniq(this.data.flatMap(x => x.languagePairs));
     }
 
-    levenshteinMatch(name: string, target: string): boolean {
-        return levenshtein(target, name) <= 5 || levenshtein(target, this.reverseName(name)) <= 5;
+    private filterByLanguage(language: string): Contact[] {
+        return this.data.filter(x => x.languagePairs.includes(language));
     }
+
+    public filterByLanguages(languages: string[]): Contact[] {
+        const data = this.data.filter((x) => {
+
+            return languages.every(language => x.languagePairs.includes(language));
+        }
+        );
+        console.log(data)
+        return data;
+    }
+
+
+
     findByName(name: string): Contact | undefined {
         try {
 
             return this.data
                 .filter((row) => row != null && row.fullName)
-                .find((row) => row?.fullName ? this.levenshteinMatch(row.fullName, name) : false);
+                .find((row) => row?.fullName ? levenshteinMatch(row.fullName, name) : false);
         } catch (e) {
             return undefined;
         }
@@ -169,6 +194,24 @@ export class GDocData {
             .map((c) => c.trim().toLowerCase());
     }
 
+
+    getAllUniqueLanguages() {
+        const result: string[] = [];
+        this.data.forEach((row) => {
+            Object.keys(row.assigned).forEach((lang) => {
+                const { translator1, translator2 } = row.assigned[lang];
+                if (translator1.language) {
+                    result.push(...translator1.language);
+                }
+                if (translator2.language) {
+                    result.push(...translator2.language);
+                }
+            })
+        })
+
+        return _.uniq(result);
+    }
+
     getAllRooms() {
         const result: string[] = [];
         this.data.forEach((row) => {
@@ -233,7 +276,60 @@ export class GDocData {
         })
 
         return result;
+    }
 
+
+
+    getAllEventsInTimeRange(startTime: DateTime, endTime: DateTime): GDocDataRow[] {
+        const filteredEvents = this.data.filter((row) => row.event.start >= startTime && row.event.end <= endTime);
+        return filteredEvents;
+    }
+
+    getAllTranslatorsAssignedToEvent(row: GDocDataRow) {
+        const allTranslators = this.getAllTranslators();
+        const assignedTranslators = this.findAllTranslatorsForEvent(row.event);
+        return assignedTranslators;
+    }
+
+    matchTranslatorWithContact(contact: Contact): Translator | undefined {
+        if (!contact) return undefined;
+        return this.getAllTranslators().find((t) => levenshteinMatch(t.name, contact.fullName));
+    }
+
+    checkIfTranslatorIsFree(startTime: DateTime, endTime: DateTime, translator: Translator): boolean {
+
+        const translatorEvents = this.getAllEventsForTranslator(translator);
+
+        const eventsInTimeRange = translatorEvents.filter((event) => event.event.start.day === startTime.day).filter((event) => {
+
+
+            const isEventInRange = event.event.start >= startTime && event.event.start < endTime;
+            const isStartTimeBetweenEvent = event.event.start < startTime && event.event.end > startTime;
+            const isEndTimeBetweenEvent = event.event.start < endTime && event.event.end > endTime;
+
+            return isEventInRange || isStartTimeBetweenEvent || isEndTimeBetweenEvent;
+
+            return true;
+
+        });
+
+
+
+        if (eventsInTimeRange.length) return false;
+        return true;
+
+    }
+
+    checkIfTranslatorUsesLanguages(translator: Translator, languages: string[]): boolean {
+        const translatorEvents = this.getAllEventsForTranslator(translator);
+        const filteredLanguages = translatorEvents.filter((event) => {
+            return languages.some((lang) => event.languagePair === lang);
+
+        }
+        );
+
+        if (filteredLanguages.length) return true;
+        return false;
     }
 
     getAllEventsForRoom(room: string): { event: MappedEvent; assigned: AssignedToEvent }[] {
@@ -292,9 +388,24 @@ export class GDocData {
         }
         )
         return result;
-
-
     }
+
+    findAllTranslatorsForEvent(event: Event) {
+
+        const result: Translator[] = [];
+        this.data.forEach((row) => {
+            Object.keys(row.assigned).forEach((lang) => {
+                const { job1, job2, room, translator1, translator2, languagePair } = row.assigned[lang];
+                if (deepMatch(event.event, event.event) && deepMatch(event.event, event.event)) {
+                    result.push(translator1, translator2);
+                }
+            })
+        }
+        )
+        return result;
+    }
+
+
 
 }
 

@@ -1,9 +1,8 @@
 import { pdf } from "@react-pdf/renderer";
 import JSZip from "jszip";
+import _ from "lodash";
 import { Translator } from "../../types";
 import TimeTablePDF from "../TimeTablePDF";
-import { saveAs } from "file-saver";
-import _ from "lodash";
 
 export default async function zipper(
   message: { translator: Translator; events: any[] }[]
