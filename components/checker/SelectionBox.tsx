@@ -164,7 +164,10 @@ export default function SelectionBox({
         />
         <div className="mt-2 gap-1 flex flex-wrap">
           {globalFilter.languages.map((l: string) => (
-            <span className="inline-flex items-center py-0.5 pl-2 pr-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
+            <span
+              key={l}
+              className="inline-flex items-center py-0.5 pl-2 pr-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700"
+            >
               {l.toUpperCase()}
               <button
                 onClick={() => {
