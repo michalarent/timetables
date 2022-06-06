@@ -13,7 +13,7 @@ export default function Switcher({
   checked,
 }: {
   title: string;
-  description: string;
+  description?: string;
   onChange: Dispatch<SetStateAction<boolean>>;
   checked: boolean;
 }) {

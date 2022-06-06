@@ -50,6 +50,21 @@ export default function ResultTable({
                     </span>
                   </a>
                 </th>
+
+                <th
+                  scope="col"
+                  className="px-3 sticky top-0 z-10 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  <a href="#" className="group inline-flex">
+                    Location
+                    <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
+                      <ChevronDownIcon
+                        className="invisible ml-2 h-5 w-5 flex-none rounded text-gray-400 group-hover:visible group-focus:visible"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </a>
+                </th>
                 <th
                   scope="col"
                   className="px-3 sticky top-0 z-10 py-3.5 text-left text-sm font-semibold text-gray-900"
@@ -87,16 +102,17 @@ export default function ResultTable({
                           : index
                       }
                     >
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      <td className="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-medium text-gray-900 sm:pl-6">
                         {person.contact.fullName}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <td className="whitespace-nowrap px-3 py-2 text-xs  text-gray-500">
                         <div className="inline-flex items-center gap-2">
                           {person.contact.email}{" "}
                           <Copy text={person.contact.email} />
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 ">
+
+                      <td className="whitespace-nowrap px-3 py-2 text-xs text-gray-500 ">
                         <div className="inline-flex items-center gap-2">
                           {_.isEmpty(person.contact.phone) ? (
                             "-"
@@ -108,7 +124,12 @@ export default function ResultTable({
                           )}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <td className="whitespace-nowrap px-3 py-2 text-xs text-gray-500">
+                        <div className="inline-flex items-center gap-2">
+                          {person.contact.location}{" "}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-xs text-gray-500">
                         {person.contact.languagePairs.map((str, index) => {
                           return (
                             <span key={str + index}>
@@ -120,7 +141,7 @@ export default function ResultTable({
                         }) || "Nie znaleziono"}
                       </td>
 
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 justify-end flex gap-2">
+                      <td className="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 justify-end flex gap-2">
                         {person.type === "matched" ? (
                           <Link href={`/?t=${person.translator.name}`} passHref>
                             <a target="_blank" rel="noreferrer">

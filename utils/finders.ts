@@ -159,8 +159,8 @@ export function findAllEventsForTranslator(
             for (let i = index; i > 0; i--) {
                 if (
                     data.data[i][0]
-                        ? data.data[i][0].includes("Dzień")
-                        : data.data[i][0] && data.data[i][0].includes("Dzień")
+                        ? data.data[i][0].includes("Day")
+                        : data.data[i][0] && data.data[i][0].includes("Day")
                 ) {
                     day = data.data[i][0];
 
@@ -195,9 +195,10 @@ export function findAllEventsForTranslator(
             });
         });
 
+
         return eventsWithDays;
     } catch (e) {
-
+        console.log(e)
     }
 }
 
@@ -215,6 +216,7 @@ export function parseTimeBrackets(
     if (match) {
         const date = match[1];
         const [day, month] = date.split(".");
+
         const year = "2022";
         const { startTime, endTime } = parseTimeFromEventName(event);
 

@@ -26,6 +26,11 @@ export default function Nav() {
       href: "/checker",
       current: router.pathname === "/checker",
     },
+    {
+      name: "Eventy z problemami",
+      href: "/eventy",
+      current: router.pathname === "/eventy",
+    },
   ];
   return (
     <>

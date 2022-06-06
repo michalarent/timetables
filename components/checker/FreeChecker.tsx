@@ -17,6 +17,7 @@ export const initialState: {
     label: DateTime;
   };
   languages: string[];
+  locations: string[];
   selectedTranslators: "ALL" | "ASSIGNED" | "UNASSIGNED";
 } = {
   startTime: DateTime.fromObject({
@@ -42,6 +43,7 @@ export const initialState: {
     value: 26,
   },
   languages: [],
+  locations: [],
   selectedTranslators: "ALL",
 };
 
@@ -96,6 +98,10 @@ export default function FreeChecker({
     let contacts: Contact[] = globalFilter.languages.length
       ? contactData.filterByLanguages(globalFilter.languages)
       : contactData.data;
+
+    contacts = globalFilter.locations.length
+      ? contactData.filterByLocations(globalFilter.locations)
+      : contacts;
 
     const matched: MatchedOrUnmatched[] = contacts.map((contact) => {
       const match = gDoc.matchTranslatorWithContact(contact);

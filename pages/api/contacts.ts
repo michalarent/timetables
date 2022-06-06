@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const result = await api.spreadsheets.values.get({
         spreadsheetId: env.SPREADSHEET_ID,
-        range: `Kontakty!A1:H300`,
+        range: `Kontakty!A1:I300`,
     })
 
     res.status(200).json({ data: result.data.values })

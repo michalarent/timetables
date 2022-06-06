@@ -41,6 +41,7 @@ export type Contact = {
     languagePairs: string[];
     phone: string;
     email: string;
+    location: string;
 }
 
 export function reverseName(name: string): string {
@@ -55,15 +56,17 @@ export function levenshteinMatch(name: string, target: string): boolean {
 export class Contacts {
     readonly data: Contact[];
     readonly allUniqueLanguages: string[];
+    readonly allUniqueLocations: string[];
 
     constructor(data: string[][]) {
         this.data = this.parseContactData(data);
         this.allUniqueLanguages = this.parseAllUniqueLanguages();
+        this.allUniqueLocations = this.parseAllUniqueLocations();
     }
 
     parseContactData(data: string[][]): Contact[] {
         const contacts = data.slice(1).map((row, index) => {
-            const [indexStr, lastName, firstName, lp1, lp2, lp3, phone, email] = row;
+            const [indexStr, lastName, firstName, lp1, lp2, lp3, phone, email, location] = row;
             return {
                 index: indexStr,
                 lastName: lastName,
@@ -72,6 +75,7 @@ export class Contacts {
                 languagePairs: [lp1, lp2, lp3].filter(x => x !== ""),
                 phone: phone,
                 email: email,
+                location: location,
             }
         });
         return _.uniqBy(contacts, x => x.email);
@@ -79,6 +83,10 @@ export class Contacts {
 
     parseAllUniqueLanguages(): string[] {
         return _.uniq(this.data.flatMap(x => x.languagePairs));
+    }
+
+    parseAllUniqueLocations(): string[] {
+        return _.uniq(this.data.flatMap(x => x.location)).filter(x => x !== "" && x != null);
     }
 
     private filterByLanguage(language: string): Contact[] {
@@ -93,6 +101,16 @@ export class Contacts {
         );
         console.log(data)
         return data;
+    }
+
+
+
+    public filterByLocations(locations: string[]): Contact[] {
+        console.log(locations);
+        if (locations.length)
+            return this.data.filter((x) => !_.isUndefined(x.location)).filter(x => locations.map((x) => x.toLowerCase()).includes(x.location.toLowerCase()));
+
+        return this.data;
     }
 
 
@@ -135,9 +153,10 @@ export class GDocData {
 
 
 
+
             if (CURRENT_DAY !== "") {
                 const eventName = row[0];
-
+                console.log(eventName)
                 const { start, end } = parseTimeBrackets(CURRENT_DAY, eventName);
                 const assigned = () => {
                     const result: { [languagePair: string]: LanguageColumnRow } = {};
@@ -185,6 +204,8 @@ export class GDocData {
 
         return result;
     }
+
+
 
     getaAllLanguagePairs(data: string[][]) {
 
@@ -405,10 +426,26 @@ export class GDocData {
         return result;
     }
 
+    findAllEventsWithoutARoom() {
 
+        return this.data.filter((row) => {
+            return Object.keys(row.assigned).some((lang) => {
+                return row.assigned[lang].room === '';
+            })
+        }
+        );
+    }
 
+    findAllTranslatorPairsWithoutTwoTranslators() {
+
+        return this.data.filter((row) => {
+            return Object.keys(row.assigned).some((lang) => {
+                return row.assigned[lang].translator1.name === "" || row.assigned[lang].translator2.name === "" || row.assigned[lang].translator1 === undefined || row.assigned[lang].translator2 === undefined;
+            })
+        }
+        );
+    }
 }
-
 
 export type AssignedToEvent =
     { translator1: Translator; translator2: Translator, languagePair: string, job1: string; job2: string }[];
