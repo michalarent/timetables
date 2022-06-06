@@ -9,6 +9,7 @@ export type Event = {
     day: string;
     start: DateTime;
     end: DateTime;
+    languagePairs?: string[];
 };
 
 export function langPairAndReverse(langPair: string): [string, string] {

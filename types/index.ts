@@ -166,6 +166,8 @@ export class GDocData {
                             return deepMatch(c, lang);
                         });
 
+
+
                         result[lang] = {
                             job1: row[langColStartlIndex],
                             job2: row[langColStartlIndex + 1],
@@ -191,7 +193,8 @@ export class GDocData {
                         day: CURRENT_DAY,
                         event: eventName,
                         start,
-                        end
+                        end,
+                        languagePairs: row[1] ? row[1].split(",").map(x => x.trim()).filter(x => x !== "") : undefined
                     },
                     date: start,
                     assigned: assigned()
@@ -211,7 +214,7 @@ export class GDocData {
 
         return data[0]
             .slice(1)
-            .filter((c) => c !== "" && c != null)
+            .filter((c) => c !== "" && c != null && !deepMatch(c, "Kombinacje językowe"))
             .map((c) => c.trim().toLowerCase());
     }
 
@@ -436,11 +439,16 @@ export class GDocData {
         );
     }
 
-    findAllTranslatorPairsWithoutTwoTranslators() {
+    findAllTranslatorPairsWithoutTwoTranslators(showEventsWithoutBothTranslators: boolean) {
 
         return this.data.filter((row) => {
             return Object.keys(row.assigned).some((lang) => {
-                return row.assigned[lang].translator1.name === "" || row.assigned[lang].translator2.name === "" || row.assigned[lang].translator1 === undefined || row.assigned[lang].translator2 === undefined;
+                if (!showEventsWithoutBothTranslators) {
+                    return row.assigned[lang].translator1.name === "" || row.assigned[lang].translator2.name === "" || row.assigned[lang].translator1 === undefined || row.assigned[lang].translator2 === undefined;
+                }
+                if (showEventsWithoutBothTranslators && row.event.languagePairs?.some((lp) => deepMatch(lp, lang))) {
+                    return row.assigned[lang].translator1.name === "" || row.assigned[lang].translator2.name === "" || row.assigned[lang].translator1 === undefined || row.assigned[lang].translator2 === undefined;
+                }
             })
         }
         );

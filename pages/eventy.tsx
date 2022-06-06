@@ -5,6 +5,7 @@ import useSWR, { SWRResponse } from "swr";
 import OnOff from "../components/checker/OnOff";
 import Nav from "../components/Nav";
 import { GDocData } from "../types";
+import { deepMatch } from "../utils/strings";
 
 const tabs = [
   {
@@ -116,7 +117,9 @@ export default function FreeRoomsPage() {
             </div>
             <ul className="divide-y">
               {gDoc
-                .findAllTranslatorPairsWithoutTwoTranslators()
+                .findAllTranslatorPairsWithoutTwoTranslators(
+                  showEventsWithoutBothTranslators
+                )
                 .filter((pair) => {
                   if (!showEventsWithoutBothTranslators) {
                     const pairs = Object.keys(pair.assigned).filter((key) => {
@@ -186,7 +189,12 @@ export default function FreeRoomsPage() {
                                   : pair.assigned[key].translator1.name}{" "}
                               </div>
                             );
-                          } else if (showEventsWithoutBothTranslators) {
+                          } else if (
+                            showEventsWithoutBothTranslators &&
+                            pair.event.languagePairs?.some((pair) =>
+                              deepMatch(pair, key)
+                            )
+                          ) {
                             return (
                               <div>
                                 {key.toUpperCase()}:{" "}

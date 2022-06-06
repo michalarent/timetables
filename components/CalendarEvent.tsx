@@ -41,7 +41,7 @@ export default function CalendarEvent({
     Math.abs(endTime.diff(startTime).as("hours") * 4)
   );
 
-  console.log(DAYS_DIFF);
+  console.log(event.event.languagePairs);
   return (
     <>
       <Tippy
