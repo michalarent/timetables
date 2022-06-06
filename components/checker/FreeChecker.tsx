@@ -178,47 +178,49 @@ export default function FreeChecker({
             Resetuj filtry
           </button>
         )}
-        <div className="h-full">
-          <SelectionBox
-            gDoc={gDoc}
-            contacts={contactData}
-            globalFilter={globalFilter}
-            setGlobalFilter={(globalFilter) => {
-              setGlobalFilter(globalFilter);
-            }}
-          />
-        </div>
-        <div className="flex flex-col gap-2 w-full ">
-          <RadioSelect
-            filter={globalFilter.selectedTranslators}
-            setFilter={(val) => {
-              setGlobalFilter((globalFilter) => ({
-                ...globalFilter,
-                selectedTranslators: val,
-              }));
-            }}
-          />
-          <button
-            onClick={() => {
-              startTransition(() => {
-                handleFirstSearch();
-                getTranslators();
-                setGlobalFilterSnapshot(globalFilter);
-              });
-            }}
-            type="button"
-            className="inline-flex items-center px-6 py-3 border w-full justify-center border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            <SearchIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
-            Szukaj
-          </button>
-          <small className="text-center w-full mt-1 text-gray-500">
-            {!_.isEqual(globalFilter, globalFilterSnapshot) ? (
-              "Zmieniono filtry. Wcisnij guzik, aby zobaczyc zmiany."
-            ) : (
-              <span className="text-transparent">Nic</span>
-            )}
-          </small>
+        <div className="h-full overflow-auto relative">
+          <div className="absolute justify-between flex flex-col top-0 min-h-full w-full overflow-auto">
+            <SelectionBox
+              gDoc={gDoc}
+              contacts={contactData}
+              globalFilter={globalFilter}
+              setGlobalFilter={(globalFilter) => {
+                setGlobalFilter(globalFilter);
+              }}
+            />
+            <div className="flex h-full flex-col gap-2 w-full ">
+              <RadioSelect
+                filter={globalFilter.selectedTranslators}
+                setFilter={(val) => {
+                  setGlobalFilter((globalFilter) => ({
+                    ...globalFilter,
+                    selectedTranslators: val,
+                  }));
+                }}
+              />
+              <button
+                onClick={() => {
+                  startTransition(() => {
+                    handleFirstSearch();
+                    getTranslators();
+                    setGlobalFilterSnapshot(globalFilter);
+                  });
+                }}
+                type="button"
+                className="inline-flex items-center px-6 py-3 border w-full justify-center border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <SearchIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
+                Szukaj
+              </button>
+              <small className="text-center w-full mt-1 text-gray-500">
+                {!_.isEqual(globalFilter, globalFilterSnapshot) ? (
+                  "Zmieniono filtry. Wcisnij guzik, aby zobaczyc zmiany."
+                ) : (
+                  <span className="text-transparent">Nic</span>
+                )}
+              </small>
+            </div>
+          </div>
         </div>
       </div>
       <div className=" w-full relative h-full overflow-x-hidden">

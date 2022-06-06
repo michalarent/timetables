@@ -58,8 +58,8 @@ export default function SelectionBox({
   }, [globalFilter.startTime, globalFilter.endTime]);
 
   return (
-    <div className="w-full flex flex-col justify-center items-center gap-2 mt-8 mb-8">
-      <div className="w-full">
+    <div className="w-full h-full flex flex-col justify-center items-center gap-2 mb-8">
+      <div className="w-full h-auto">
         <small className="text-gray-400">Dzień</small>
 
         <Select
@@ -90,7 +90,7 @@ export default function SelectionBox({
           itemLabel={"formatted"}
         />
       </div>
-      <div className={`flex items-center gap-2 w-full  `}>
+      <div className={`flex items-center gap-2 w-full h-full  `}>
         <div className="w-full">
           <small className="text-gray-400">Od</small>
 
@@ -148,7 +148,7 @@ export default function SelectionBox({
           </div>
         </div>
       </div>
-      <div className="w-full mb-2">
+      <div className="w-full h-full mb-2">
         <small className="text-gray-400">Języki</small>
 
         <Select
