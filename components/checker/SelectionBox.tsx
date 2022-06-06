@@ -200,10 +200,10 @@ export default function SelectionBox({
         </div>
       </div>
       <div className="w-full mb-2">
-        <small className="text-gray-400">Języki</small>
+        <small className="text-gray-400">Miasta</small>
 
         <Select
-          label={"Języki"}
+          label={"Wybierz miasta"}
           onSelect={(option: string) => {
             setGlobalFilter((globalFilter) => ({
               ...globalFilter,

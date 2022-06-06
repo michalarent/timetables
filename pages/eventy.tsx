@@ -1,10 +1,8 @@
 import _ from "lodash";
 import { DateTime } from "luxon";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR, { SWRResponse } from "swr";
 import OnOff from "../components/checker/OnOff";
-import SimpleSwitch from "../components/checker/SimpleSwitch";
-import Switcher from "../components/checker/Switcher";
 import Nav from "../components/Nav";
 import { GDocData } from "../types";
 
