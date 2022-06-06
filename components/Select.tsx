@@ -21,12 +21,12 @@ export default function Select({
           <Popover.Button
             className={`
             ${open ? "" : "text-opacity-90"}
-            items-center border h-10 flex gap-1 w-full border-gray-300 bg-white px-3.5 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:relative`}
+            items-center border h-10 flex gap-1 w-full justify-between border-gray-300 bg-white px-3.5 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:relative`}
           >
             <span className="w-full text-center">{label}</span>
             <ChevronDownIcon
               className={`${open ? "" : "text-opacity-70"}
-              ml-2 h-5 w-5 absolute right-2 transition duration-150 ease-in-out group-hover:text-opacity-80`}
+              ml-2 h-5 w-5 block right-2 transition duration-150 ease-in-out group-hover:text-opacity-80`}
               aria-hidden="true"
             />
           </Popover.Button>
