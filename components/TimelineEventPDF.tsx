@@ -49,9 +49,15 @@ export default function TimelineEventPDF({
   }
 
   const getOtherTranslatorName = () => {
+    console.log(event.translator1.name);
+    console.log(event.translator2.name);
+    console.log(translator);
     try {
       if (!event) return false;
-      return deepMatch(event?.translator1?.name, translator)
+      return deepMatch(
+        polishReplace(event?.translator1?.name),
+        polishReplace(translator)
+      )
         ? polishReplace(event?.translator2?.name)
         : polishReplace(event?.translator1?.name);
     } catch {
@@ -109,24 +115,6 @@ export default function TimelineEventPDF({
     }
   }
 
-  function getBorder() {
-    if (!event) return "0px";
-    if (
-      time.equals(event.event.end.minus({ minutes: 30 })) &&
-      time.equals(event.event.start)
-    ) {
-      return { border: "1px solid" };
-    }
-    if (time.equals(event.event.start)) {
-      return { border: "1px solid", borderBottom: 0 };
-    }
-    if (time.equals(event.event.end.minus({ minutes: 30 }))) {
-      return { border: "1px solid", borderTop: 0 };
-    } else {
-      return { borderRight: "1px solid", borderLeft: "1px solid" };
-    }
-  }
-
   const timeDiff =
     Math.abs(event.event.end.diff(event.event.start).as("hours")) * 80;
 
@@ -152,7 +140,7 @@ export default function TimelineEventPDF({
           justifyContent: "flex-start",
           borderColor: "black",
           position: "absolute",
-          zIndex: 0,
+          zIndex: 1,
 
           borderTop: time.equals(event.event.start) ? "1px solid #ccc" : "none",
           borderBottom: time.equals(event.event.end.minus({ minutes: 15 }))

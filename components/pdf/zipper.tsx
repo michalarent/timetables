@@ -2,6 +2,7 @@ import { pdf } from "@react-pdf/renderer";
 import JSZip from "jszip";
 import _ from "lodash";
 import { Translator } from "../../types";
+import { deepMatch } from "../../utils/strings";
 import TimeTablePDF from "../TimeTablePDF";
 
 export default async function zipper(
@@ -12,7 +13,7 @@ export default async function zipper(
   const blobs = await Promise.all(
     message
       .filter((t) => t.translator.name !== "")
-
+      .filter((t) => deepMatch(t.translator.name, "bogutyn dorota"))
       .map((c) => {
         const name = c.translator.name
           .normalize("NFD")

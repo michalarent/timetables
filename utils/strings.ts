@@ -4,6 +4,18 @@ import { capitalize } from "lodash";
 
 export function capitalizeName(name: string) {
     if (!name) return "";
+    // if name includes -, split it and capitalize each part then join them
+
+    if (name.includes("-")) {
+        let [surname, firstName] = name.split(" ");
+        const parts = surname.split("-");
+        surname = parts.map(capitalize).join("-");
+
+        return surname + " " + capitalize(firstName);
+    }
+
+    // if name doesn't include -, just capitalize first letter
+
     return name.split(" ").map((s) => capitalize(s)).join(" ");
 }
 

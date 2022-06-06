@@ -34,9 +34,9 @@ const Home = () => {
     <ErrorBoundary fallback={<div>Error :D</div>}>
       {data.data ? (
         <TimeTablePDF
-          translator="Krasnowolski Piotr"
+          translator="Janowska-Moniuszko Elzbieta"
           events={gDoc.getAllEventsForTranslator({
-            name: "Krasnowolski Piotr",
+            name: "janowska-moniuszko elżbieta",
             language: [],
           })}
         />

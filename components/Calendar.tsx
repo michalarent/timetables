@@ -16,7 +16,7 @@ function classNames(...classes: string[]) {
 export const palette = [
   colors["amber-50"],
   colors["blue-50"],
-  colors["yellow-50"],
+
   colors["green-50"],
   colors["red-50"],
   colors["purple-50"],
