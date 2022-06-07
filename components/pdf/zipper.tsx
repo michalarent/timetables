@@ -13,7 +13,6 @@ export default async function zipper(
   const blobs = await Promise.all(
     message
       .filter((t) => t.translator.name !== "")
-      .filter((t) => deepMatch(t.translator.name, "bogutyn dorota"))
       .map((c) => {
         const name = c.translator.name
           .normalize("NFD")
