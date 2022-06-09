@@ -14,17 +14,16 @@ function classNames(...classes: string[]) {
 }
 
 export const palette = [
-  colors["amber-50"],
-  colors["blue-50"],
+  colors["amber-200"],
+  colors["blue-200"],
 
-  colors["green-50"],
-  colors["red-50"],
-  colors["purple-50"],
-  colors["pink-50"],
-  colors["indigo-50"],
-  colors["teal-50"],
-  colors["orange-50"],
-  colors["cyan-50"],
+  colors["green-200"],
+  colors["red-200"],
+  colors["purple-200"],
+  colors["pink-200"],
+  colors["indigo-200"],
+  colors["teal-200"],
+  colors["cyan-200"],
 ];
 
 export default function Calendar({

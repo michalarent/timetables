@@ -2,7 +2,7 @@ import { pdf } from "@react-pdf/renderer";
 import JSZip from "jszip";
 import _ from "lodash";
 import { Translator } from "../../types";
-import { deepMatch } from "../../utils/strings";
+import { capitalizeName, deepMatch } from "../../utils/strings";
 import TimeTablePDF from "../TimeTablePDF";
 
 export default async function zipper(
@@ -13,13 +13,18 @@ export default async function zipper(
   const blobs = await Promise.all(
     message
       .filter((t) => t.translator.name !== "")
+
       .map((c) => {
-        const name = c.translator.name
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "");
+        let name = capitalizeName(c.translator.name);
+
         const filename = name
           .split(" ")
-          .map((n) => _.capitalize(n))
+          .map((n) =>
+            _.capitalize(n)
+              .split("-")
+              .map((n) => _.capitalize(n))
+              .join("-")
+          )
           .join("");
         return folder?.file(
           `${filename}_timetable.pdf`,

@@ -41,7 +41,7 @@ export default function AllTranslatorsTable({
           ...t,
           contact: {
             ...contact,
-            email: contact?.email.toLowerCase(),
+            email: contact?.email?.toLowerCase(),
           },
         };
       })
@@ -92,7 +92,8 @@ export default function AllTranslatorsTable({
             if (!b.contact || !a.contact) {
               return 0;
             }
-            if (!a.contact.email || !b.contact.email) {
+
+            if (!a.contact?.email || !b.contact?.email) {
               return 0;
             }
             if (a.contact?.email < b.contact?.email) {

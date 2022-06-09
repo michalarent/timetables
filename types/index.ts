@@ -50,7 +50,7 @@ export function reverseName(name: string): string {
 }
 
 export function levenshteinMatch(name: string, target: string): boolean {
-    return levenshtein(target, name) <= 5 || levenshtein(target, reverseName(name)) <= 5;
+    return levenshtein(target, name) <= 3 || levenshtein(target, reverseName(name)) <= 3;
 }
 
 export class Contacts {
