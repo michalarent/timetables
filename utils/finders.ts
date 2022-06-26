@@ -210,38 +210,47 @@ export function parseTimeBrackets(
     // day pattern is like: Dzień 1 (niedziela, 26.06)
     // year is 2022
     // regex: .*\(\w*,\s(.*)\)
+    try {
 
-    const regex = /(\d{2}\.\d{2})/;
-    const match = day.match(regex);
+        console.log(day);
 
-    if (match) {
-        const date = match[1];
-        const [day, month] = date.split(".");
+        const regex = /(\d{2}\.\d{2})/;
+        const match = day.match(regex);
 
-        const year = "2022";
-        const { startTime, endTime } = parseTimeFromEventName(event);
+        if (match) {
+            const date = match[1];
+            const [day, month] = date.split(".");
 
+            const year = "2022";
+            const { startTime, endTime } = parseTimeFromEventName(event);
+
+            return {
+                start: DateTime.fromObject({
+                    day: +day,
+                    month: +month,
+                    year: +year,
+                    hour: +startTime.hour,
+                    minute: +startTime.minute,
+                }),
+                end: DateTime.fromObject({
+                    day: +day,
+                    month: +month,
+                    year: +year,
+                    hour: +endTime.hour,
+                    minute: +endTime.minute,
+                }),
+            };
+        }
         return {
-            start: DateTime.fromObject({
-                day: +day,
-                month: +month,
-                year: +year,
-                hour: +startTime.hour,
-                minute: +startTime.minute,
-            }),
-            end: DateTime.fromObject({
-                day: +day,
-                month: +month,
-                year: +year,
-                hour: +endTime.hour,
-                minute: +endTime.minute,
-            }),
+            start: DateTime.fromObject({ day: 1, month: 1, year: 2020 }),
+            end: DateTime.fromObject({ day: 1, month: 1, year: 2020 }),
         };
+    } catch (e) {
+        return {
+            start: DateTime.fromObject({ day: 1, month: 1, year: 2020 }),
+            end: DateTime.fromObject({ day: 1, month: 1, year: 2020 }),
+        }
     }
-    return {
-        start: DateTime.fromObject({ day: 1, month: 1, year: 2020 }),
-        end: DateTime.fromObject({ day: 1, month: 1, year: 2020 }),
-    };
 }
 
 export function parseTimeFromEventName(eventName: string): {
